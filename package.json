@@ -1,0 +1,44 @@
+{
+    "name": "telegraf-paginator",
+    "version": "1.0.0",
+    "description": "A paginator for Telegraf",
+    "license": "MIT",
+    "author": "Stévan Corre <me@stevancorre.com> (https://stevancorre.com)",
+    "homepage": "https://github.com/stevancorre/telegraf-paginator#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/stevancorre/telegraf-paginator.git"
+    },
+    "bugs": {
+        "url": "https://github.com/stevancorre/telegraf-paginator/issues"
+    },
+    "files": [
+        "dist"
+    ],
+    "main": "dist/index.js",
+    "type": "module",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "eslint . --fix && tsup",
+        "postinstall": "npx allow-only pnpm",
+        "lint": "eslint . --fix"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.35.1",
+        "@typescript-eslint/parser": "^5.35.1",
+        "eslint": "^8.23.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-simple-import-sort": "^7.0.0",
+        "prettier": "^2.7.1",
+        "tsup": "^6.2.3",
+        "typescript": "4.7.4"
+    },
+    "keywords": [
+        "Bot",
+        "Pagination",
+        "Paginator",
+        "Telegraf",
+        "Telegram"
+    ]
+}
