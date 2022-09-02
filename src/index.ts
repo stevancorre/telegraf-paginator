@@ -1,9 +1,6 @@
 import hash from "object-hash";
 import { Composer, Context } from "telegraf";
-import {
-    InlineKeyboardMarkup,
-    ParseMode,
-} from "telegraf/typings/core/types/typegram";
+import { InlineKeyboardMarkup, ParseMode } from "telegraf/typings/core/types/typegram";
 
 export interface Page {
     title: string;
@@ -14,13 +11,8 @@ export class Paginator {
     private readonly actionId: string;
     private currentPage = 0;
 
-    public constructor(
-        private pages: ReadonlyArray<Page>,
-        private header?: string
-    ) {
-        this.actionId = hash(
-            hash(pages) + hash(header ?? Math.random().toString(64))
-        );
+    public constructor(private pages: ReadonlyArray<Page>, private header?: string) {
+        this.actionId = hash(hash(pages) + hash(header ?? Math.random().toString(64)));
     }
 
     public text(): string {
@@ -58,5 +50,3 @@ export class Paginator {
         });
     }
 }
-
-export { Context };
