@@ -16,7 +16,9 @@ export class Paginator {
     }
 
     public text(): string {
-        return `${this.header ?? ""}\n${this.pages[this.currentPage].data}`;
+        return `${this.header ? (this.header.endsWith("\n") ? this.header : this.header + "\n") : ""}${
+            this.pages[this.currentPage].data
+        }`;
     }
 
     public extra(): {
