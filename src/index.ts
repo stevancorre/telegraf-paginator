@@ -23,7 +23,7 @@ export class Paginator {
 
     public extra(): {
         reply_markup: InlineKeyboardMarkup;
-        parseMode: ParseMode;
+        parse_mode: ParseMode;
     } {
         return {
             reply_markup: {
@@ -34,7 +34,7 @@ export class Paginator {
                     })),
                 ],
             },
-            parseMode: "HTML",
+            parse_mode: "HTML",
         };
     }
 
