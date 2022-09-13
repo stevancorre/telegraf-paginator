@@ -21,7 +21,7 @@ export class Paginator {
     public constructor(private readonly pages: ReadonlyArray<Page>, options?: Partial<PaginatorOptions>) {
         this.actionId = hash(JSON.stringify(pages) + Math.random().toString(16));
 
-        if (options?.header?.endsWith("\n")) options.header += "\n";
+        if (options?.header && !options.header.endsWith("\n")) options.header += "\n";
 
         this.options = {
             ...DEFAULT_OPTIONS,
