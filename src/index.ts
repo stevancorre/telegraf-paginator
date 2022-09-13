@@ -1,44 +1,62 @@
 import hash from "object-hash";
 import { Composer, Context } from "telegraf";
-import { InlineKeyboardMarkup, ParseMode } from "telegraf/typings/core/types/typegram";
+import { InlineKeyboardButton } from "telegraf/typings/core/types/typegram";
 
-export interface Page {
-    title: string;
-    data: string;
-}
+import { Extras } from "./Extras";
+import { PaginatorOptions } from "./Options";
+import { Page } from "./Page";
+
+const DEFAULT_OPTIONS: PaginatorOptions = <const>{
+    header: "",
+    footer: "",
+    maxPagesPerRow: 4,
+    parseMode: "HTML",
+};
 
 export class Paginator {
     private readonly actionId: string;
+    private readonly options: Readonly<PaginatorOptions>;
     private currentPage = 0;
 
-    public constructor(private pages: ReadonlyArray<Page>, private header?: string) {
-        this.actionId = hash(hash(pages) + hash(header ?? Math.random().toString(64)));
-    }
+    public constructor(private readonly pages: ReadonlyArray<Page>, options?: Partial<PaginatorOptions>) {
+        this.actionId = hash(JSON.stringify(pages) + Math.random().toString(16));
 
-    public text(): string {
-        return `${this.header ? (this.header.endsWith("\n") ? this.header : this.header + "\n") : ""}${
-            this.pages[this.currentPage].data
-        }`;
-    }
+        if (options?.header?.endsWith("\n")) options.header += "\n";
 
-    public extra(): {
-        reply_markup: InlineKeyboardMarkup;
-        parse_mode: ParseMode;
-    } {
-        return {
-            reply_markup: {
-                inline_keyboard: [
-                    this.pages.map((x: Page, i: number) => ({
-                        text: x.title,
-                        callback_data: this.callbackDataForPage(i),
-                    })),
-                ],
-            },
-            parse_mode: "HTML",
+        this.options = {
+            ...DEFAULT_OPTIONS,
+            ...options,
         };
     }
 
-    private callbackDataForPage(page: number) {
+    public text(): string {
+        return `${this.options?.header}${this.pages[this.currentPage].data}\n${this.options?.footer}`;
+    }
+
+    public extras(): Readonly<Extras> {
+        const keyboard: InlineKeyboardButton[][] = [];
+        let row: InlineKeyboardButton[] = [];
+        for (let i = 0; i < this.pages.length; i++) {
+            row.push({
+                text: this.pages[i].title,
+                callback_data: this.callbackDataForPage(i),
+            });
+
+            if (i === this.pages.length - 1 || (i + 1) % (this.options?.maxPagesPerRow ?? 4) === 0) {
+                keyboard.push(row);
+                row = [];
+            }
+        }
+
+        return {
+            reply_markup: {
+                inline_keyboard: keyboard,
+            },
+            parse_mode: this.options.parseMode,
+        };
+    }
+
+    private callbackDataForPage(page: number): string {
         return `${this.actionId}-${page}`;
     }
 
@@ -48,7 +66,9 @@ export class Paginator {
             if (this.currentPage == newPage) return await ctx.answerCbQuery();
             this.currentPage = newPage;
 
-            await ctx.editMessageText(this.text(), this.extra());
+            await ctx.editMessageText(this.text(), this.extras());
         });
     }
 }
+
+export { Extras, Page, PaginatorOptions };
