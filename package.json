@@ -19,7 +19,6 @@
     ],
     "scripts": {
         "build": "eslint . --fix && tsup",
-        "postinstall": "npx allow-only pnpm",
         "lint": "eslint . --fix"
     },
     "types": "dist/index.d.ts",
