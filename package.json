@@ -18,6 +18,7 @@
         "dist/"
     ],
     "scripts": {
+        "prepare": "tsup",
         "build": "eslint . --fix && tsup",
         "lint": "eslint . --fix"
     },
